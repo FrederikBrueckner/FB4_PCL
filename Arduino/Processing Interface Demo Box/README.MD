@@ -1,0 +1,3 @@
+Atmega 32u4 (Arduino Leonardo, Pro Micro) based HID serving as a universal input device for various experiments in Processing
+Joystick input for mouse emulation, resetable rotary encoder, 4-digit 7 segment display as feedback...
+Future updates will include button to keyboard emulation.
