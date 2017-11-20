@@ -7,7 +7,7 @@
 #define DIO 9  // TM1637 DIO PIN 
 
 // Create display object
-TM1637Display display(CLK, DIO); 
+TM1637Display display(CLK, DIO);
 
 // Rotary encoder is wired with the common to ground and the two outputs to pins 2 and 3.
 Rotary rotary = Rotary(2, 3);
@@ -18,12 +18,12 @@ Rotary rotary = Rotary(2, 3);
    license: MIT License - Feel free to use this code for any purpose.
    No restrictions. Just keep this license if you go on to use this
    code in your future endeavors! Reuse and share.
- 
+
    Based on Code examples by Jim Lindblom for SparkFun Electronics
    Thumb Joystick to HID Mouse. The select button on the joystick is set up
    as the mouse left click. Rotary encoder counts up and down, reset via encoder click.
- */
- 
+*/
+
 // -----------------------------------------------------------------------------
 // constants
 
@@ -54,19 +54,19 @@ void setup();
 
 void rotate()  {
   unsigned char result = rotary.process();
-    if (result == DIR_CW) {
-      virtualPosition++;
-    } else if (result == DIR_CCW) {
-      virtualPosition--;
-      }
-    
-    } // rotate
+  if (result == DIR_CW) {
+    virtualPosition++;
+  } else if (result == DIR_CCW) {
+    virtualPosition--;
+  }
+
+} // rotate
 
 // -----------------------------------------------------------------------------
 // setup
 
 void setup()
-{ 
+{
   Serial.begin(57600);
   pinMode(horzPin, INPUT);    // joystick X
   pinMode(vertPin, INPUT);    // joystick Y
@@ -84,11 +84,11 @@ void setup()
 
   display.setBrightness(15);
   uint8_t data[] = { 0xff, 0xff, 0xff, 0xff }; // all segments on
-  
+
   // set display segments.
   display.setSegments(data);
 
-  } // setup
+} // setup
 
 // -----------------------------------------------------------------------------
 // main loop
@@ -97,44 +97,44 @@ void loop()
 {
   int lastCount = 0; // rotary counter
   while (true) {
-  vertValue = analogRead(vertPin) - vertZero;  // read vertical offset
-  horzValue = analogRead(horzPin) - horzZero;  // read horizontal offset
-  
-  if (vertValue != 0)
-    Mouse.move(0, vertValue/sensitivity, 0);  // move mouse on y axis
-  if (horzValue != 0)
-    Mouse.move(horzValue/sensitivity, 0, 0);  // move mouse on x axis
-    
-  if ((digitalRead(selPin) == 0) && (!mouseClickFlag))  // if the joystick button is pressed
-  {
-    mouseClickFlag = 1;
-    Mouse.press(MOUSE_LEFT);  // click the left button down
-  }
-  else if ((digitalRead(selPin))&&(mouseClickFlag)) // if the joystick button is not pressed
-  {
-    mouseClickFlag = 0;
-    Mouse.release(MOUSE_LEFT);  // release the left button
-  }
-  if (!(digitalRead(PinSW))) {              // check if pushbutton is pressed
-            virtualPosition = 0;            // if YES, then reset counter to ZERO
-            while (!digitalRead(PinSW)) {}  // wait till switch is released
-            delay(10);                      // debounce
-            Serial.println("Reset");        // using the word RESET instead of COUNT here to find out a buggy encoder
-            }
-        if (virtualPosition != lastCount) { // show rotary counter on display
-            lastCount = virtualPosition;
-            Serial.print("Count = ");
-            Serial.println(virtualPosition);
-            if (virtualPosition > -1){      // positive numbers, include zero
-              display.setSegments(0x40, 1, 4);
-              display.showNumberDec(virtualPosition, true, 3, 1);
-            }
-            else {                          // negative numbers, show signed
-              uint8_t clrs[] = {0x40};
-              display.setSegments(clrs, 1, 4);
-              display.showNumberDec(-virtualPosition, true, 3, 1);
-            }
-        }
-            
+    vertValue = analogRead(vertPin) - vertZero;  // read vertical offset
+    horzValue = analogRead(horzPin) - horzZero;  // read horizontal offset
+
+    if (vertValue != 0)
+      Mouse.move(0, vertValue / sensitivity, 0); // move mouse on y axis
+    if (horzValue != 0)
+      Mouse.move(horzValue / sensitivity, 0, 0); // move mouse on x axis
+
+    if ((digitalRead(selPin) == 0) && (!mouseClickFlag))  // if the joystick button is pressed
+    {
+      mouseClickFlag = 1;
+      Mouse.press(MOUSE_LEFT);  // click the left button down
+    }
+    else if ((digitalRead(selPin)) && (mouseClickFlag)) // if the joystick button is not pressed
+    {
+      mouseClickFlag = 0;
+      Mouse.release(MOUSE_LEFT);  // release the left button
+    }
+    if (!(digitalRead(PinSW))) {              // check if pushbutton is pressed
+      virtualPosition = 0;            // if YES, then reset counter to ZERO
+      while (!digitalRead(PinSW)) {}  // wait till switch is released
+      delay(10);                      // debounce
+      Serial.println("Reset");        // using the word RESET instead of COUNT here to find out a buggy encoder
+    }
+    if (virtualPosition != lastCount) { // show rotary counter on display
+      lastCount = virtualPosition;
+      Serial.print("Count = ");
+      Serial.println(virtualPosition);
+      if (virtualPosition > -1) {     // positive numbers, include zero
+        display.setSegments(0x40, 1, 4);
+        display.showNumberDec(virtualPosition, true, 3, 1);
+      }
+      else {                          // negative numbers, show signed
+        uint8_t clrs[] = {0x40};
+        display.setSegments(clrs, 1, 4);
+        display.showNumberDec(-virtualPosition, true, 3, 1);
+      }
+    }
+
   }
 } // main loop
