@@ -1,5 +1,7 @@
 #include <AbsMouse.h>
 
+
+
 /* Poti to mouse axis
  * Atmega 32u4 (Arduino Leonardo, Pro Micro) based HID serving as absolute mouse position input
  * Two 5k ohm potis as input for mouse emulation
@@ -17,9 +19,8 @@ void setup() {
 
 void loop() {
  // read and scale the two axes:
-  int xReading = map(readAxis(A0), 0, 1023, 0, xRes); // read and scale values to match screen size
-  int yReading = map(readAxis(A1), 0, 1023, 0, yRes);
+  int xReading = map(analogRead(xAxis), 0, 1023, 0, xRes); // read and scale values to match screen size
+  int yReading = map(analogRead(yAxis), 0, 1023, 0, yRes);
   AbsMouse.move(xReading, yReading);
   }
 
-}
