@@ -9,9 +9,9 @@
  * Connect potentiometer pins: 1 -> GND, 2 -> analog input, 3 -> VCC
  */
 
-const int xAxis = A0;   // select the input pins for the potentiometers
+const int xAxis = A0;   // Select the input pins for the potentiometers
 const int yAxis = A1;
-const int xRes = 1920;
+const int xRes = 1920;  // Screen resolution to map to
 const int yRes = 1080;   
 
 void setup() {
