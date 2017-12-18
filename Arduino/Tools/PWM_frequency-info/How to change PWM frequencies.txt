@@ -4,6 +4,9 @@
 
 //---------------------------------------------- Set PWM frequency for D5 & D6 -------------------------------
 
+// CAUTION! Changing the prescale factor on Timer0 will affect functions millis(), micros(), delay(),...
+// Prescaler -> overflow counter can be corrected in hardware\arduino\cores\arduino\wiring.c
+
 //TCCR0B = TCCR0B & B11111000 | B00000001;    // set timer 0 divisor to     1 for PWM frequency of 62500.00 Hz
 //TCCR0B = TCCR0B & B11111000 | B00000010;    // set timer 0 divisor to     8 for PWM frequency of  7812.50 Hz
   TCCR0B = TCCR0B & B11111000 | B00000011;    // set timer 0 divisor to    64 for PWM frequency of   976.56 Hz (Default)
