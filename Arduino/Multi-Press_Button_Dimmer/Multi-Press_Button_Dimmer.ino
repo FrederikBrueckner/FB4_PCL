@@ -61,8 +61,8 @@ void loop() {
 void buttonPressed() {
   static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
-  // If interrupts come faster than 200ms, assume it's a bounce and ignore
-  if (interrupt_time - last_interrupt_time > 200) {
+  // If interrupts come faster than 200ms, assume it's a bounce and ignore --> fixed for PWM prescaler x8
+  if (interrupt_time - last_interrupt_time > 1600) {
     if (!state) {
       count = 1;
       state = !state;
@@ -71,8 +71,8 @@ void buttonPressed() {
       count = 0;
       state = !state;
     }
+    last_interrupt_time = interrupt_time;
   }
-  last_interrupt_time = interrupt_time;
 } // end buttonPressed
 
 void fade(int Target, unsigned long thisTime) {   // Fade currentLevel to new value
