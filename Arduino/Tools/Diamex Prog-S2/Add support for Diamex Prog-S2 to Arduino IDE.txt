@@ -1,0 +1,18 @@
+Add Diamex Prog-S2 ISP adapter to Arduino IDE (latest releases)
+
+OS X:
+
+Add this to ~/Library/Arduino15/packages/arduino/hardware/avr/1.6.20/programmers.txt
+
+# Diamex USB-ISP Programmer
+diamexavr.name=DIAMEX-AVR
+diamexavr.communication=serial
+diamexavr.protocol=stk500v2
+diamexavr.program.tool=avrdude
+diamexavr.program.extra_params=-P{serial.port}
+
+
+Firmware updates and drivers:
+
+https://www.diamex.de/dxshop/mediafiles//Sonstiges/erfos-prog.zip
+https://www.diamex.de/dxshop/mediafiles//Sonstiges/Prog_S2_Update_141.zip
