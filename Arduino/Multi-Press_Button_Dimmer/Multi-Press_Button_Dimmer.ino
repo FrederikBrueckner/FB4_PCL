@@ -8,23 +8,22 @@
 */
 
 
-volatile int count;               // Count button presses
-volatile int currentBrightness;   // Keep track of last brightness level
-volatile int setLevel;            // Set new target brightness
-#define BUTTON 2                  // Input button on pin 2
-#define PWM 5                     // PWM pin to drive MOSFET on pin 5
-const int full = 255;             // Configure brightness levels
-const int mid = 127;
-const int low = 60;
-const int fadeSpeed = 50;       // Fade speed between brightness levels
-volatile boolean state = false;   // Should the MOSFET be powered?
-unsigned long time;               // Keep track of loop time
+volatile int count = 0;             // Count button presses, initialize to zero
+volatile int currentBrightness = 0; // Keep track of last brightness level, initialize to zero
+volatile int setLevel = 0;          // Set new target brightness, initialize to zero
+const int BUTTON = 2;               // Input button on pin 2
+const int PWM = 5;                  // PWM pin to drive MOSFET on pin 5
+const int full = 255;               // Configure brightness levels
+const int mid = 80;
+const int low = 10;
+const int fadeSpeed = 50;           // Fade speed between brightness levels
+const int timeOut = 8000;           // Time frame for multi-click detection
+const int longClick = 8000;         // Hold button down for long click
+volatile boolean state = false;     // Should the MOSFET be powered?
+unsigned long time;                 // Keep track of loop time
 unsigned long lastFade;
 
 void setup() {
-  count = 0;                      // Initialize button press counter
-  currentBrightness = 0;          // Initialize brightness to zero
-  setLevel = 0;                   // Initialize target brightness
   pinMode(BUTTON, INPUT_PULLUP);  // Enable "button" as input pin, internal pull up
   pinMode(PWM, OUTPUT);           // Enable "PWM" as output pin
   attachInterrupt(digitalPinToInterrupt(BUTTON), buttonPressed, FALLING); // Call interrupt routine on falling edge
@@ -39,39 +38,39 @@ void setup() {
 
 void loop() {
   time = millis();
-  if (state) {
-    switch (count) {
-      case 1: // Full on
-        setLevel = full;
-        break;
-      case 2: // Medium on
-        setLevel = mid;
-        break;
-      case 3: // Low on
-        setLevel = low;
-        break;
+  switch (count) {
+    case 0: //Off
+      setLevel = 0;
+      break;
+    case 1: // Full on
+      setLevel = full;
+      break;
+    case 2: // Medium on
+      setLevel = mid;
+      break;
+    case 3: // Low on
+      setLevel = low;
+      break;
     }
-  }
-  else {
-    setLevel = 0;
-  }
   fade(setLevel, time);
 } // end loop
 
 void buttonPressed() {
-  static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
+  static unsigned long lastInterrupt = 0;   // Time since last interrupt
+  unsigned long interruptTime = millis();   // Time when interrupt occurred
   // If interrupts come faster than 200ms, assume it's a bounce and ignore --> fixed for PWM prescaler x8
-  if (interrupt_time - last_interrupt_time > 1600) {
-    if (!state) {
-      count = 1;
-      state = !state;
+  if (interruptTime - lastInterrupt > 1600) {
+    if (count == 0) {
+      lastInterrupt = interruptTime;
+      count++;
     }
-    else {
+    else if (count > 0 && count < 3 && interruptTime <= lastInterrupt+timeOut) {
+      count++;
+    }
+    else if (count > 0 && interruptTime >= lastInterrupt+timeOut) {
+      lastInterrupt = interruptTime;
       count = 0;
-      state = !state;
     }
-    last_interrupt_time = interrupt_time;
   }
 } // end buttonPressed
 
