@@ -39,8 +39,8 @@ void loop() {
     Serial.print(sens[i]);
     Serial.println(" cm");
   }
-
-  if (minDist <= far && minDist > near) {
+  minDistance();
+  if (minDist <= far && minDist > near+10) {
     activeZone = 'B';
   }  
   else if (minDist < near) {
@@ -53,7 +53,6 @@ void loop() {
     Keyboard.print(activeZone);
     lastZone = activeZone;
   }
-  minDistance();
   Serial.print(activeZone);
   Serial.print(minDist);
 } // End loop
