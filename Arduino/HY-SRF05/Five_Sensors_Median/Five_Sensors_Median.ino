@@ -2,7 +2,7 @@
 #include <Keyboard.h>
 
 /*
- * Fivee HY-SRF05 ultrasonic distance sensors
+ * Five HY-SRF05 ultrasonic distance sensors
  * Utilises »New Ping« library with median filter
  * by: Frederik Brückner
  * date: 2018-01-11

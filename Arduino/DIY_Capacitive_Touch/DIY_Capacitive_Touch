@@ -1,0 +1,5 @@
+Qty,partname,description,lib
+0,"Arduino_Leonardo","","atmel"
+0,"C_Small","Unpolarized capacitor","device"
+0,"R","Resistor","device"
+0,"TEST","Testpoint, connection for test equipment","device"
