@@ -34,11 +34,11 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
-Title ""
-Date ""
-Rev ""
-Comp ""
-Comment1 ""
+Title "Arduino Pro Micro simple capacitive touch shield"
+Date "2018-01-12"
+Rev "1"
+Comp "FH Aachen, FB Gestaltung, Physical Computing Labor"
+Comment1 "by Frederik Brückner"
 Comment2 ""
 Comment3 ""
 Comment4 ""
@@ -103,7 +103,7 @@ L Arduino_Leonardo U1
 U 1 1 5A58EF40
 P 2650 3400
 F 0 "U1" H 2350 4150 50  0000 C CNN
-F 1 "Arduino_Pro_Micro" H 2600 2650 50  0000 C CNN
+F 1 "Arduino_Pro_Micro" V 2650 3400 50  0000 C CNN
 F 2 "Arduino Shields:Arduino_Pro_Micro" H 3850 4500 50  0001 C CNN
 F 3 "" H 3850 4500 50  0001 C CNN
 	1    2650 3400
@@ -850,4 +850,6 @@ Wire Wire Line
 Connection ~ 2400 4900
 Connection ~ 2400 1900
 NoConn ~ 2300 4100
+Text Notes 2400 1500 0    60   ~ 0
+Change resistors R1 .. R12 to increase sensitivity.\nHigher values equal higher sense distance.\n100kΩ .. 1mΩ = measure physical touch\n1mΩ .. 10mΩ = touchless sensing up to 10cm away\n10mΩ .. 50mΩ = touchless sensing up to 30cm away\nHigher values make the sensors act slower, possible timeout!
 $EndSCHEMATC
