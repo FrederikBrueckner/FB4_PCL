@@ -850,4 +850,6 @@ Wire Wire Line
 Connection ~ 2400 4900
 Connection ~ 2400 1900
 NoConn ~ 2300 4100
+Text Notes 2400 1500 0    60   ~ 0
+Change resistors R1 .. R12 to increase sensitivity.\nHigher values equal higher sense distance.\n100kΩ .. 1mΩ = measure physical touch\n1mΩ .. 10mΩ = touchless sensing up to 10cm away\n10mΩ .. 50mΩ = touchless sensing up to 30cm away\nHigher values make the sensors act slower, possible timeout!
 $EndSCHEMATC
