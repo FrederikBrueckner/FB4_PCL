@@ -12,13 +12,14 @@
  * Send keystrokes with touch electrodes
  */
 
-boolean debug = true;              // debug mode enable/disable
+boolean debug = false;              // debug mode enable/disable
 const int threshold = 500;          // sensitivity threshhold for touch detection
 const int numSense = 10;            // number of sensors
 const int sampleLength = 80;        // sample length in bytes
 volatile long senseArray[numSense]; // sensor value array
 unsigned long debounceDelay = 20;   // software debounce time
 unsigned long lastTouch = 0;        // when did the last touch register
+char lastKey = '';                  // last keypress
 
 CapacitiveSensor CS[numSense] =     // sensor object array 1M resistor between pins 2 & sensor pin, add a wire and or foil
 {
@@ -77,9 +78,10 @@ void loop()
   } // end debug
   
   for (int i=0; i<numSense; i++){
-    if (senseArray[i] > threshold && (millis() - lastTouch) > debounceDelay){
+    if (senseArray[i] > threshold && (millis() - lastTouch) > debounceDelay && lastKey != keys[i]){
       lastTouch = millis();
       Keyboard.print(keys[i]);
+      lastKey = keys[i];
     }
   }
 } // end loop
