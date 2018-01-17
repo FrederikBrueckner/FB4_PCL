@@ -42,6 +42,13 @@ SFEMP3Shield MP3player;
 byte result;
 int lastPlayed = 0;
 
+// playlist variables
+const int listLength = 10;
+const int garbage = 50;  //empty track
+volatile int playList[listLength];
+boolean record = false;
+boolean play = false;
+
 // mp3 behaviour defines
 #define REPLAY_MODE TRUE  // By default, touching an electrode repeatedly will 
                           // play the track again from the start each time.
@@ -116,6 +123,7 @@ void setup() {
     Serial.print(result);
     Serial.println(" when trying to start MP3 player");
   }
+  
 } // End Setup
 
 void loop() {
@@ -126,7 +134,7 @@ void loop() {
   currtouchedD = capD.touched();
   
   
-  for (uint8_t i=0; i<12; i++) {
+  for (uint8_t i=0; i<12; i++) {  // get sensor data
     // it if *is* touched and *wasnt* touched before, alert!
     if ((currtouchedA & _BV(i)) && !(lasttouchedA & _BV(i)) ) {
       touchPin = i;
@@ -147,7 +155,20 @@ void loop() {
       touchPin = 36 + i;
       Serial.println(touchPin);
     }
-  }
+  }  // End get sensor data
+
+  if(touchPin = 0 || touchPin = 1){  // play/record state, pin 0 = record, pin 1 = play
+    if(touchPin = 0){
+      record = true;
+      for (int i=0; i<listLength; i++){  // initialise playList with empty tracks
+        playList[i] = garbage;
+      }
+    }
+    if(touchPin = 1){ // pin 1 = play
+      record = false;
+      play = true;
+    }
+  } // End play/record state
   
   // reset our state
   lasttouchedA = currtouchedA;
@@ -155,35 +176,36 @@ void loop() {
   lasttouchedC = currtouchedC;
   lasttouchedD = currtouchedD;
   
-  if(touchPin<=lastPin && touchPin>=firstPin && touchPin != lastPlayed){
-              if(MP3player.isPlaying()){
-                if(lastPlayed==touchPin && !REPLAY_MODE){
-                  // if we're already playing the requested track, stop it
-                  // (but only if we're not in REPLAY_MODE)
-                  MP3player.stopTrack();
-                  Serial.print("stopping track ");
-                  Serial.println(touchPin-firstPin);
-                } else {
-                  // if we're already playing a different track (or we're in
-                  // REPLAY_MODE), stop and play the newly requested one
-                  MP3player.stopTrack();
-                  MP3player.playTrack(touchPin-firstPin);
-                  Serial.print("playing track ");
-                  Serial.println(touchPin-firstPin);
-                  
-                  // don't forget to update lastPlayed - without it we don't
-                  // have a history
-                  lastPlayed = touchPin;
-                }
-              } else {
-                // if we're playing nothing, play the requested track 
-                // and update lastplayed
-                MP3player.playTrack(touchPin-firstPin);
-                Serial.print("playing track ");
-                Serial.println(touchPin-firstPin);
-                lastPlayed = touchPin;
-              }
-            }
+  if(touchPin<=lastPin && touchPin>=firstPin && touchPin != lastPlayed){  // play single item
+    if(MP3player.isPlaying()){
+      if(lastPlayed==touchPin && !REPLAY_MODE){
+        // if we're already playing the requested track, stop it
+        // (but only if we're not in REPLAY_MODE)
+        MP3player.stopTrack();
+        Serial.print("stopping track ");
+        Serial.println(touchPin-firstPin);
+      } else {
+        // if we're already playing a different track (or we're in
+        // REPLAY_MODE), stop and play the newly requested one
+        MP3player.stopTrack();
+        MP3player.playTrack(touchPin-firstPin);
+        Serial.print("playing track ");
+        Serial.println(touchPin-firstPin);
+        // don't forget to update lastPlayed - without it we don't
+        // have a history
+        lastPlayed = touchPin;
+      }
+    } else {
+      // if we're playing nothing, play the requested track 
+      // and update lastplayed
+      MP3player.playTrack(touchPin-firstPin);
+      Serial.print("playing track ");
+      Serial.println(touchPin-firstPin);
+      lastPlayed = touchPin;
+    }
+  } // End play single item
+  
+            
 } // End loop
 
 
