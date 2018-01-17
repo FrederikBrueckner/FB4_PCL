@@ -48,6 +48,7 @@ const int garbage = 50;  //empty track
 volatile int playList[listLength];
 boolean record = false;
 boolean play = false;
+volatile int listCounter = 0;
 
 // mp3 behaviour defines
 #define REPLAY_MODE TRUE  // By default, touching an electrode repeatedly will 
@@ -58,7 +59,7 @@ boolean play = false;
                           // playing, or play it from the start if it is not.
                           
 // touch behaviour definitions
-#define firstPin 0
+#define firstPin 2
 #define lastPin 47
 
 // sd card instantiation
@@ -157,16 +158,18 @@ void loop() {
     }
   }  // End get sensor data
 
-  if(touchPin = 0 || touchPin = 1){  // play/record state, pin 0 = record, pin 1 = play
-    if(touchPin = 0){
+  if(touchPin == 0 || touchPin == 1){  // play/record state, pin 0 = record, pin 1 = play
+    if(touchPin == 0){
       record = true;
+      listCounter = 0;
       for (int i=0; i<listLength; i++){  // initialise playList with empty tracks
         playList[i] = garbage;
       }
     }
-    if(touchPin = 1){ // pin 1 = play
+    if(touchPin == 1){ // pin 1 = play
       record = false;
       play = true;
+      Serial.print("Playmode enabled");
     }
   } // End play/record state
   
@@ -204,8 +207,25 @@ void loop() {
       lastPlayed = touchPin;
     }
   } // End play single item
-  
-            
+
+  if(record && listCounter < 10 && touchPin !=0 && touchPin !=1 && touchPin != garbage){  // record mode enabled
+    playList[listCounter] = touchPin;
+    touchPin = garbage;
+    listCounter++;
+  } // end record mode
+
+  if(play){  // play mode enabled
+    for (int i = 0; i < listLength;){
+     if(!MP3player.isPlaying()){
+       MP3player.playTrack(playList[i]);      
+       Serial.print("playing track ");
+       Serial.println(playList[i]);
+       i++;
+     }
+    }
+    touchPin = garbage;
+    play = false;
+  }  // end play mode
 } // End loop
 
 
