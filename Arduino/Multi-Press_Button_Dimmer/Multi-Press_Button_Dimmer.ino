@@ -7,7 +7,6 @@
    Recommended MOSFET: IRL540
 */
 
-
 volatile int count = 0;             // Count button presses, initialize to zero
 volatile int currentBrightness = 0; // Keep track of last brightness level, initialize to zero
 volatile int setLevel = 0;          // Set new target brightness, initialize to zero
@@ -33,13 +32,12 @@ void setup() {
   // Set PWM frequency prescaler for D5 & D6
   // CAUTION! Changing timer 0 Changing the prescale factor on Timer0 will affect functions millis(), micros(), delay(),...
   TCCR0B = TCCR0B & B11111000 | B00000010;    // set timer 0 divisor to 8 for PWM frequency of 7812.50 Hz (8000 millis ~ 1 second)
-
 } //end setup
 
 void loop() {
   time = millis();
   switch (count) {
-    case 0: //Off
+    case 0: // Off
       setLevel = 0;
       break;
     case 1: // Full on
@@ -59,15 +57,12 @@ void buttonPressed() {
   static unsigned long lastInterrupt = 0;   // Time since last interrupt
   unsigned long interruptTime = millis();   // Time when interrupt occurred
   // If interrupts come faster than 200ms, assume it's a bounce and ignore --> fixed for PWM prescaler x8
-  if (interruptTime - lastInterrupt > 1600) {
-    if (count == 0) {
+  if (interruptTime - lastInterrupt > 1600) {  // Count three button presses and roll over
+    if (count >= 0 && count <3) {
       lastInterrupt = interruptTime;
       count++;
     }
-    else if (count > 0 && count < 3 && interruptTime <= lastInterrupt+timeOut) {
-      count++;
-    }
-    else if (count > 0 && interruptTime >= lastInterrupt+timeOut) {
+    else if (count == 3) {
       lastInterrupt = interruptTime;
       count = 0;
     }
