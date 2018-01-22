@@ -1,5 +1,5 @@
 # FB4_PCL
-###FH Aachen FB4 Physical Computing Lab Repository
+### FH Aachen FB4 Physical Computing Lab Repository
 
 To get started, download the Arduino IDE from [Arduino site](https://www.arduino.cc/en/Main/Software)
 
