@@ -15,7 +15,7 @@ const int PWM = 5;					// PWM pin to drive MOSFET on pin 5
 const int full = 255;				// Configure brightness levels
 const int mid = 80;
 const int low = 10;
-const int fadeSpeed = 50;			// Fade speed between brightness levels
+const int fadeSpeed = 25;			// Fade speed between brightness levels
 const int timeOut = 8000;			// Time frame for multi-click detection
 const int longClick = 8000;			// Hold button down for long click
 volatile boolean state = false;		// Should the MOSFET be powered?
@@ -40,14 +40,14 @@ void loop() {
     case 0:			// Off
       setLevel = 0;
       break;
-    case 1:			// Full on
-      setLevel = full;
+    case 1:			// Low on
+      setLevel = low;
       break;
     case 2:			// Medium on
       setLevel = mid;
       break;
-    case 3:			// Low on
-      setLevel = low;
+    case 3:			// Full on
+      setLevel = full;
       break;
   }
   fade(setLevel, time);
