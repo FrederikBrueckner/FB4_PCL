@@ -161,6 +161,7 @@ void loop() {
   if(touchPin == 0 || touchPin == 1){  // play/record state, pin 0 = record, pin 1 = play
     if(touchPin == 0){
       record = true;
+      Serial.print("Recordmode enabled");
       listCounter = 0;
       for (int i=0; i<listLength; i++){  // initialise playList with empty tracks
         playList[i] = garbage;
@@ -179,7 +180,7 @@ void loop() {
   lasttouchedC = currtouchedC;
   lasttouchedD = currtouchedD;
   
-  if(touchPin<=lastPin && touchPin>=firstPin && touchPin != lastPlayed){  // play single item
+  if(touchPin<=lastPin && touchPin>=firstPin){  // play single item
     if(MP3player.isPlaying()){
       if(lastPlayed==touchPin && !REPLAY_MODE){
         // if we're already playing the requested track, stop it
