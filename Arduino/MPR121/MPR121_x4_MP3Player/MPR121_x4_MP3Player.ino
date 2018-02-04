@@ -68,21 +68,21 @@ SdFat sd;
 
 // Keeps track of the last pins touched
 // so we know when buttons are 'released'
-uint16_t lasttouchedA = 0;
-uint16_t currtouchedA = 0;
+uint16_t lasttouchedA = garbage;
+uint16_t currtouchedA = garbage;
 
-uint16_t lasttouchedB = 0;
-uint16_t currtouchedB = 0;
+uint16_t lasttouchedB = garbage;
+uint16_t currtouchedB = garbage;
 
-uint16_t lasttouchedC = 0;
-uint16_t currtouchedC = 0;
+uint16_t lasttouchedC = garbage;
+uint16_t currtouchedC = garbage;
 
-uint16_t lasttouchedD = 0;
-uint16_t currtouchedD = 0;
+uint16_t lasttouchedD = garbage;
+uint16_t currtouchedD = garbage;
 
 void setup() {
   Serial.begin(9600);
-
+  
   while (!Serial) { // needed to keep leonardo/micro from starting too fast!
     delay(10);
   }
@@ -92,6 +92,7 @@ void setup() {
   
   // Default address is 0x5A, if tied to 3.3V its 0x5B
   // If tied to SDA its 0x5C and if SCL then 0x5D
+  
   if (!capA.begin(0x5A)) {
     Serial.println("MPR121 A not found, check wiring?");
     while (1);
@@ -159,7 +160,7 @@ void loop() {
   }  // End get sensor data
 
   if(touchPin == 0 || touchPin == 1){  // play/record state, pin 0 = record, pin 1 = play
-    if(touchPin == 0){
+    if(touchPin == 0 && record == false){
       record = true;
       Serial.print("Recordmode enabled");
       listCounter = 0;
