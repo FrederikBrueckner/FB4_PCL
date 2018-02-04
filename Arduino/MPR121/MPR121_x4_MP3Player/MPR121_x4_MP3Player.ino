@@ -214,6 +214,9 @@ void loop() {
     touchPin = garbage;
     listCounter++;
   } // end record mode
+  if(record && listCounter >= 10 && touchPin !=0 && touchPin !=1 && touchPin != garbage){
+    return;
+  } // catch overflow
 
   if(play){  // play mode enabled
     for (int i = 0; i < listLength;){
