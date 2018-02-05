@@ -160,7 +160,7 @@ void loop() {
   }  // End get sensor data
 
   if(touchPin == 0 || touchPin == 1){  // play/record state, pin 0 = record, pin 1 = play
-    if(touchPin == 0 && record == false){
+    if(touchPin == 0 && !record){
       record = true;
       Serial.print("Recordmode enabled");
       listCounter = 0;
@@ -215,9 +215,8 @@ void loop() {
     touchPin = garbage;
     listCounter++;
   } // end record mode
-  if(record && listCounter >= 10 && touchPin !=0 && touchPin !=1 && touchPin != garbage){
-    return;
-  } // catch overflow
+  else if (record && listCounter >= 10 && touchPin !=0 && touchPin !=1 && touchPin != garbage){
+    } // catch overflow
 
   if(play){  // play mode enabled
     for (int i = 0; i < listLength;){
