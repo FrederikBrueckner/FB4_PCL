@@ -137,12 +137,12 @@ void loop() {
   
   
   for (uint8_t i=0; i<12; i++) {  // get sensor data
-    // it if *is* touched and *wasnt* touched before, alert!
+    // if it *is* touched and *wasnt* touched before, alert!
     if ((currtouchedA & _BV(i)) && !(lasttouchedA & _BV(i)) ) {
       touchPin = i;
       Serial.println(touchPin);
     }
-    // it if *is* touched and *wasnt* touched before, alert!
+    // if it *is* touched and *wasnt* touched before, alert!
     if ((currtouchedB & _BV(i)) && !(lasttouchedB & _BV(i)) ) {
       touchPin = 12 + i;
       Serial.println(touchPin);
@@ -152,7 +152,7 @@ void loop() {
       touchPin = 24 + i;
       Serial.println(touchPin);
     }
-    // it if *is* touched and *wasnt* touched before, alert!
+    // if it *is* touched and *wasnt* touched before, alert!
     if ((currtouchedD & _BV(i)) && !(lasttouchedD & _BV(i)) ) {
       touchPin = 36 + i;
       Serial.println(touchPin);
@@ -215,7 +215,9 @@ void loop() {
     touchPin = garbage;
     listCounter++;
   } // end record mode
-  else if (record && listCounter >= 10 && touchPin !=0 && touchPin !=1 && touchPin != garbage){
+  else {
+    record = false;
+    Serial.print ("Recordmode deactivated, Playlist full");
     } // catch overflow
 
   if(play){  // play mode enabled
