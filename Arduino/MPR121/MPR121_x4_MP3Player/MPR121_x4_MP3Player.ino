@@ -45,7 +45,7 @@ int lastPlayed = 0;
 // playlist variables
 const int listLength = 10;
 const int garbage = 50;  //empty track
-volatile int playList[listLength];
+volatile int playList[listLength+1];
 boolean record = false;
 boolean play = false;
 volatile int listCounter = 0;
