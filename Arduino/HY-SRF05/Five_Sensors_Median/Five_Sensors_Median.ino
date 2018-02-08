@@ -11,11 +11,11 @@
  */
 
 #define SONAR_NUM 5      // Number of sensors.
-#define MAX_DISTANCE 200 // Maximum distance (in cm) to ping.
+#define MAX_DISTANCE 250 // Maximum distance (in cm) to ping.
 
 unsigned int sensDist[SONAR_NUM]; // Store ping distance in cm per sensor
-const int near = 50; // Triggering distance 50cm 
-const int far = 150; // Triggering distance 150cm
+const int near = 100; // Triggering distance 50cm 
+const int far = 200; // Triggering distance 150cm
 char lastZone = ' '; // Outer zone A, far zone B, near zone C 
 char activeZone ='A';// Zone to change to
 volatile int minDist = 999;
@@ -51,7 +51,7 @@ void minDistance() {
    if (minDist <= far && minDist > near) {
     activeZone = 'B';
   }  
-  else if (minDist < near) {
+  else if (minDist <= near) {
       activeZone = 'C';
   }
   else {
