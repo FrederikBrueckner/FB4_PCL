@@ -27,13 +27,16 @@ XLM: GD263F3X5D5ULX7TBXF6ULPGKEICAHJEO22ZOJABNVJSCYPEJW6JBU7G
 */
 
 import gazetrack.*;
+PImage img;
 
 GazeTrack gazeTrack;
 ArrayList<PVector> trail = new ArrayList();
+PrintWriter output;
 
 void setup() 
 {
   fullScreen();
+  img = loadImage("gesicht.jpg");
   
   // Gaze cursor param.
   noFill();
@@ -45,11 +48,15 @@ void setup()
   // If the TobiiStream.exe asked you to use a 
   // different socket port (e.g., 5656), use this instead:
   // gazeTrack = new GazeTrack(this, "5656");
+  
+  // Save Strings to file
+  output = createWriter(year() + "-" + month() + "-" + day() + "_" + hour() + minute() + "_Gaze_Track.txt");
 }
 
 void draw() 
 {
   background(255);
+  image(img, 150 ,0);
   
   if (gazeTrack.gazePresent())
   {
@@ -61,6 +68,12 @@ void draw()
     fill(255,0,0);
   
     // Print the tracker's timestamp for the gaze cursor above
-    println("Latest gaze data at: " + gazeTrack.getTimestamp());
+    output.println(int(gazeTrack.getGazeX()) + ":" + int(gazeTrack.getGazeY()));
   }
+}
+
+void keyPressed() {
+  output.flush(); // Writes the remaining data to the file
+  output.close(); // Finishes the file
+  exit(); // Stops the program
 }
