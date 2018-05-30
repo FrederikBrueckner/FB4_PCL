@@ -23,6 +23,6 @@ void loop() {
   sensorValue = analogRead(sensorPin);  // sensor values: 0-1023
   swState = !digitalRead(swPin);  // true or false
   char buf[64];  // message of up to 63 chars plus zero character
-  sprintf(buf, "%04u:%01u", sensorValue, swState); // send potentiometer read value as 4 digit integer, send switch state as 1 digit
+  sprintf(buf, "%04u:%01u", sensorValue, swState); // send potentiometer read value as 4 digit, send switch state as 1 digit
   Serial.println(buf);
 } // end loop()

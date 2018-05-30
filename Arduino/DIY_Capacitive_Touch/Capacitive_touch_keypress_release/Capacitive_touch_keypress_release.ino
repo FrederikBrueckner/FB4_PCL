@@ -41,6 +41,7 @@ CapacitiveSensor CS[numSense] =     // sensor object array 1M resistor between p
 };
 
 char keys[numSense] =               // char array to hold key stroke values
+
 {
   '1',
   '2',
