@@ -27,7 +27,7 @@ void setup() {
 void loop() {
   // read the value from the sensor:
   sensorValue = analogRead(sensorPin);  // sensor values: 0-1023
-  swState = !digitalRead(swPin);  // true or false
+  swState = digitalRead(swPin);  // true or false
   up = !digitalRead(selUp);
   down = !digitalRead(selDown);
   char buf[16];  // message of up to 15 chars plus zero character
