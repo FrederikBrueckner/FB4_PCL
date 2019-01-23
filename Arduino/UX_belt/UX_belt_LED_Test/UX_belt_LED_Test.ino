@@ -1,7 +1,7 @@
 const int mikrofon = A0; // Variable für Mikrofon Eingang
 const int grenze = 600;
-const int led = 8;
-const int dauer = 500;
+const int led = 7;
+const int dauer = 1500;
 
 void setup() {
 Serial.begin(9600);

@@ -20,7 +20,7 @@ const int low = 10;
 const int fadeSpeed = 25;			    // Fade speed between brightness levels
 const int timeOut = 8000;			    // Time frame for multi-click detection
 const int longClick = 8000;			  // Hold button down for long click
-const int threshold = 500;        // sensitivity threshhold for touch detection
+const int threshold = 400;        // sensitivity threshhold for touch detection
 const int sampleLength = 80;      // sample length in bytes
 long sense;                       // sensor value array
 unsigned long debounceDelay = 20; // software debounce time
@@ -31,6 +31,7 @@ unsigned long lastFade;				    // Keep track of fading time
 CapacitiveSensor CS = CapacitiveSensor(2,3);            // Configure capacitive sensor
 
 void setup() {
+  //Serial.begin(9600);
   pinMode(PWM1, OUTPUT);				// Enable "PWM" as output pin
   pinMode(PWM2, OUTPUT);        // Enable "PWM" as output pin
   lastFade = 0;						// Initialize to zero
@@ -44,6 +45,7 @@ void setup() {
 
 void loop() {
   sense = CS.capacitiveSensor(sampleLength);
+  //Serial.println(sense);
   if (sense > threshold && (millis() - lastTouch) > debounceDelay){
       lastTouch = millis();
       buttonPressed();
