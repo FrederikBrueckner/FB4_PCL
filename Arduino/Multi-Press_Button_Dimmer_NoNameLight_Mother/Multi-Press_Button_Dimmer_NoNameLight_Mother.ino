@@ -9,7 +9,6 @@
 
 volatile int count = 0;				// Count button presses, initialize to zero
 volatile int currentBrightness1 = 0;  // Keep track of last brightness level, initialize to zero
-volatile int currentBrightness2 = 0;  // Keep track of last brightness level, initialize to zero
 volatile int setLevel1 = 0;			// Set new target brightness, initialize to zero
 const int BUTTON = 2;				// Input button on pin 2
 const int PWM1 = 6;					// PWM pin to drive MOSFET on pin 5
@@ -59,13 +58,13 @@ void buttonPressed() {
   unsigned long interruptTime = millis();		// Time when interrupt occurred
   // If interrupts come faster than 200ms, assume it's a bounce and ignore --> PWM prescaler fix x8
   if (interruptTime - lastInterrupt > 1600) {	// Count three button presses and roll over
-    if (count >= 0 && count <3) {
+    if (count >= 3 || (interruptTime - lastInterrupt > 24000)) {            // If count exceeds 3, roll over to zero
+      lastInterrupt = interruptTime;        // Reset debounce timer
+      count = 0;
+    }
+    else if (count >= 0 && count <3) {
       lastInterrupt = interruptTime;				// Reset debounce timer
       count++;
-    }
-    else if (count >= 3) {						// If count exceeds 3, roll over to zero
-      lastInterrupt = interruptTime;				// Reset debounce timer
-      count = 0;
     }
     Serial.println(count);
   }
