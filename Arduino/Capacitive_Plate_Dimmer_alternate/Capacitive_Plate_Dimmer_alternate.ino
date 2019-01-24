@@ -96,17 +96,17 @@ void fade(int Target1, int Target2, unsigned long thisTime) {  // Fade currentLe
       currentBrightness1 += 1;          // Increment currentBrightness
     }
     else if (currentBrightness1 > Target1) {
-        currentBrightness1 -= 1;          // Decrement currentBrightness
+        currentBrightness1 -= 1;        // Decrement currentBrightness
     }
     if (currentBrightness2 + 1 <= Target2) {
       currentBrightness2 += 1;          // Increment currentBrightness
     } 
     else if (currentBrightness2 > Target2) {
-        currentBrightness2 -= 1;          // Decrement currentBrightness
+        currentBrightness2 -= 1;        // Decrement currentBrightness
     }
     analogWrite(PWM1, currentBrightness1);      // Set new brightness level
     analogWrite(PWM2, currentBrightness2);
-    lastFade = thisTime;              // Reset fade delay
+    lastFade = thisTime;                // Reset fade delay
   }
 } // end fade
 
