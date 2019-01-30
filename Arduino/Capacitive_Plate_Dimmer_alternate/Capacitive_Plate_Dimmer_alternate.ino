@@ -19,8 +19,8 @@ boolean BUTTON;     				      // Input button on pin 2
 const int PWM1 = 6;					      // PWM pin to drive MOSFET on pin 5
 const int PWM2 = 5;               // PWM pin to drive MOSFET on pin 6
 const int full = 255;				      // Configure brightness levels
-const int mid = 80;
-const int low = 10;
+const int mid = 140;
+const int low = 60;
 const int fadeSpeed = 25;			    // Fade speed between brightness levels
 const int threshold = 500;        // sensitivity threshhold for touch detection
 long sense;                       // sensor value array
@@ -31,8 +31,8 @@ unsigned long time;					      // Keep track of loop time
 unsigned long lastFade;				    // Keep track of fading time
 
 void setup() {
-  //Serial.begin(9600);
-  ref0 = ADCTouch.read(A0, 400);    //create reference values to 
+  Serial.begin(9600);
+  ref0 = ADCTouch.read(A0, 800);    //create reference values to 
   pinMode(PWM1, OUTPUT);				// Enable "PWM" as output pin
   pinMode(PWM2, OUTPUT);        // Enable "PWM" as output pin
   lastFade = 0;						// Initialize to zero
@@ -46,8 +46,8 @@ void setup() {
 
 void loop() {
   sense = ADCTouch.read(A0);
-  //Serial.println(sense);
-  if (sense > threshold && (millis() - lastTouch) > debounceDelay){
+  Serial.println(sense);
+  if (sense < threshold && (millis() - lastTouch) > debounceDelay){
       lastTouch = millis();
       buttonPressed();
     }
