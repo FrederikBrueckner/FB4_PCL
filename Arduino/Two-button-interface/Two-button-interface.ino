@@ -11,7 +11,7 @@
 
 static const int leftButton = 9;  // the number of the pushbutton pin
 static const int rightButton =  10; // the number of the LED pin
-static const int slider = A6;       // the number of the slider pin
+static const int slider = A2;       // the number of the slider pin
 static const int threshold = 500; // 500 millis debounce
 // variables will change:
 volatile int leftState = 0;          // variable for reading the pushbutton status
@@ -24,14 +24,14 @@ void setup() {
   pinMode(leftButton, INPUT_PULLUP);
   pinMode(rightButton, INPUT_PULLUP);
   pinMode(slider, INPUT);
-//  Serial.begin(9600);
+  Serial.begin(9600);
   Keyboard.begin();      // Initialize keyboard emulation
 
 } // end setup()
 
 void loop() {
   int slider_value = analogRead(slider);
-  //Serial.println(slider_value);
+  Serial.println(slider_value);
 
   if (slider_value <= 110 && lastKey != keys[0]) {
     lastKey = keys[0];
