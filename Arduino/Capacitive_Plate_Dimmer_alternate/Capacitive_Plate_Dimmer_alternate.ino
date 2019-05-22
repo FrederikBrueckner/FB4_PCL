@@ -47,7 +47,7 @@ void setup() {
 void loop() {
   sense = ADCTouch.read(A0);
   Serial.println(sense);
-  if (sense < threshold && (millis() - lastTouch) > debounceDelay){
+  if (sense > threshold && (millis() - lastTouch) > debounceDelay){
       lastTouch = millis();
       buttonPressed();
     }
