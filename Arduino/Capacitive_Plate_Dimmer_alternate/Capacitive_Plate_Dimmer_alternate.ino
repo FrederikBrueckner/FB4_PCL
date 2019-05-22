@@ -22,7 +22,7 @@ const int full = 255;				      // Configure brightness levels
 const int mid = 140;
 const int low = 60;
 const int fadeSpeed = 25;			    // Fade speed between brightness levels
-const int threshold = 500;        // sensitivity threshhold for touch detection
+const int threshold = 100;        // sensitivity threshhold for touch detection
 long sense;                       // sensor value array
 unsigned long debounceDelay = 20; // software debounce time
 unsigned long lastTouch = 0;      // when did the last touch register
@@ -32,7 +32,8 @@ unsigned long lastFade;				    // Keep track of fading time
 
 void setup() {
   Serial.begin(9600);
-  ref0 = ADCTouch.read(A0, 800);    //create reference values to 
+  delay(500);   // settle MCU
+  ref0 = ADCTouch.read(A0, 500);    //create reference values to 
   pinMode(PWM1, OUTPUT);				// Enable "PWM" as output pin
   pinMode(PWM2, OUTPUT);        // Enable "PWM" as output pin
   lastFade = 0;						// Initialize to zero
@@ -45,7 +46,7 @@ void setup() {
 } //end setup
 
 void loop() {
-  sense = ADCTouch.read(A0);
+  sense = ADCTouch.read(A0) - ref0;
   Serial.println(sense);
   if (sense > threshold && (millis() - lastTouch) > debounceDelay){
       lastTouch = millis();
@@ -109,4 +110,3 @@ void fade(int Target1, int Target2, unsigned long thisTime) {  // Fade currentLe
     lastFade = thisTime;                // Reset fade delay
   }
 } // end fade
-
