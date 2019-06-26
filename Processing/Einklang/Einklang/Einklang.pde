@@ -1,4 +1,8 @@
 import processing.sound.*;
+import processing.serial.*;
+Serial myPort;
+String val = "0000:0000:0000";     // data from the serial port
+int[] values = {0,0,0};
 
 Scene2 scn2;
 Scene3 scn3;
@@ -49,7 +53,38 @@ int waveLength = 500;
 
 public void settings() {
   size(314, 620);
+  String portName = Serial.list()[0]; // change the 0 to a 1 or 2 etc. to match your port
+  myPort = new Serial(this, portName, 9600);
+  myPort.bufferUntil('\n');
+
 }
+
+void serialEvent(Serial myPort){ // sensor input via serial port with exception handling
+  try
+  {
+    while ( myPort.available() > 0) // do only when port is available
+    {  
+      if(val != null) // check for NullPointerException
+        {
+          val = myPort.readStringUntil('\n');         // read data and store string in val
+          values = int(split(val, ':')); // split datapackage and convert to float
+          
+        }
+     } 
+   }
+   catch (Exception e) { // exception handling
+     println(e);
+   }
+ }
+
+
+void keyPressed() {
+  if (key == 's') {
+    saveFrame("ScreenShot-######.png");  // save a screen to disk
+    
+  }
+}
+ 
 
 void setup(){
 // surface.setResizable(true); //Fenster variable Größe
@@ -77,6 +112,9 @@ void setup(){
 
 
 void draw() {
+  
+  S1frequenz = map(values[0], 0, 1024, 10, 5000);
+  println(S1frequenz);
   
   background(0);
   for(int i=0; i<(width+diameter/2)/(diameter+abstand); i++) {
@@ -196,6 +234,9 @@ void setup(){
 
 void draw() {
   
+  S2frequenz = map(values[1], 0, 1024, 10, 5000);
+    println(S2frequenz);
+  
   background(0);
   for(int i=0; i<(width+diameter/2)/(diameter+abstand); i++) {
     f=f+S2frequenz/100000;
@@ -313,6 +354,9 @@ void setup(){
 
 
 void draw() {
+  
+  S3frequenz = map(values[2], 0, 1024, 10, 5000);
+  println(S3frequenz);
   
   background(0);
   for(int i=0; i<(width+diameter/2)/(diameter+abstand); i++) {
