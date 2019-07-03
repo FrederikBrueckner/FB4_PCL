@@ -1,3 +1,12 @@
+/* //<>//
+ *  Einklang Sketch by Laura Carl
+ *  Programming by Laura, Robert and Frederik
+ *  FH Aachen Fachbereich für Gestaltung
+ *  Physical Computing Lab 2019
+ *
+ */
+
+
 import processing.sound.*;
 import processing.serial.*;
 Serial myPort;
@@ -8,34 +17,31 @@ Scene scn1;
 Scene scn2;
 Scene scn3;
 
-SinOsc[] wfm = {new SinOsc(this), new SinOsc(this), new SinOsc(this)};
-
 public void settings() {
   //size(314, 620, P3D);
-  String portName = Serial.list()[1]; // change the 0 to a 1 or 2 etc. to match your port
+  String portName = Serial.list()[0]; // change the 0 to a 1 or 2 etc. to match your port
   myPort = new Serial(this, portName, 9600);
   myPort.bufferUntil('\n');
   fullScreen();
 }
 
 void setup() {
-  scn1 = new Scene(314, 620, 100, 100, 0, 100, -1.0);
-  scn2 = new Scene(314, 620, 514, 100, 1, 500, 0);
-  scn3 = new Scene(314, 620, 928, 100, 2, 800, 1.0);
-
+  scn1 = new Scene(314, 620, 100, 100, 200, -1.0, 0);
+  scn2 = new Scene(314, 620, 514, 100, 500, 0, 1);
+  scn3 = new Scene(314, 620, 928, 100, 800, 1.0, 2);
 }
 
 void draw() {
-  background(50); //<>//
+  background(0);
   surface.setVisible(false);
 }
 
 
 class Scene extends PApplet {
-  
+
   float Sfrequenz;
   // Für Punkte
-  int diameter;
+  int diameter = 7;
   float t=0;
   float dt=0.1;
   float amplitude = Sfrequenz/31;
@@ -62,30 +68,32 @@ class Scene extends PApplet {
   float p;
   int waveCount;
   int waveLength = 500;
-  int windowX;
-  int windowY;
-  int posX;
-  int posY;
-  int ID;
-  FFT fft;
+  int windowX;  // surface size x
+  int windowY;  // surface size y
+  int posX;  // surface position x
+  int posY;  // surface position y
+  int ID;  // surface ID
   Sound s;
-  boolean play = true;
+  FFT fft = new FFT(this, 16384);
+  SinOsc wfm = new SinOsc(this);
+  float sineFreq;
 
 
-  Scene(int X, int Y, int pX, int pY, int num, float Frequenz, float pan) {
+
+  Scene(int X, int Y, int pX, int pY, float Frequenz, float pan, int num) {
     super();
     PApplet.runSketch(new String[] {this.getClass().getSimpleName()}, this);
     windowX = X;
     windowY = Y;
     posX = pX;
     posY = pY;
-    ID = num;
     Sfrequenz = Frequenz;
     p = pan;
+    ID = num;
   } // end Scene()
 
   void settings() {
-    size(314, 620, P2D);
+    size(314, 620);
     fullScreen();
   } // end settings()
 
@@ -101,11 +109,9 @@ class Scene extends PApplet {
     dx = (TWO_PI / period) * xspacing;
     yvalues = new float[232/xspacing];
 
-    fft = new FFT(this, 16384);
-    wfm[ID].pan(p);
-    wfm[ID].play();
-    fft.input(wfm[ID]);
-    
+    wfm.play();
+    wfm.pan(p);
+    fft.input(wfm);
   } // end setup()
 
 
@@ -118,7 +124,7 @@ class Scene extends PApplet {
     // Turn the volume down globally.
     s = new Sound(this);
     s.volume(0.2);
-    wfm[ID].freq(Sfrequenz);
+    wfm.freq(Sfrequenz);
 
     background(0);
     amplitude = Sfrequenz/31;
