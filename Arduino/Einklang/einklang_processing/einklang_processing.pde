@@ -117,6 +117,7 @@ class Scene extends PApplet {
     tall = height / 2;
     dx = (TWO_PI / period) * xspacing;
     yvalues = new float[232 / xspacing];
+    fft.input(wfm);
   } // end setup()
 
 void audio(){  // play sine tone
@@ -125,7 +126,6 @@ void audio(){  // play sine tone
   wfm.pan(p);    
   wfm.freq(Sfrequency);
   wfm.amp(amp);
-  fft.input(wfm);
  
 }
 
@@ -147,8 +147,8 @@ void audio(){  // play sine tone
 
     background(0);
     amplitude = Sfrequency/31;
-    T = 10200/Sfrequency;
-    period = 204000/Sfrequency;
+    T = 10200 / Sfrequency;
+    period = 204000 / Sfrequency;
     for (int i = 0; i < (width + diameter / 2) / (diameter + distance); i++) {
       f = f + Sfrequency / 100000;
       for (int k = 0; k < (height + diameter / 2) / (diameter + distance); k++) {
