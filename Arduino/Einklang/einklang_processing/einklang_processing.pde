@@ -8,6 +8,7 @@ Scene scn1;
 Scene scn2;
 Scene scn3;
 
+SinOsc[] wfm = {new SinOsc(this), new SinOsc(this), new SinOsc(this)};
 
 public void settings() {
   //size(314, 620, P3D);
@@ -67,7 +68,6 @@ class Scene extends PApplet {
   int posY;
   int ID;
   FFT fft;
-  SinOsc sine = new SinOsc(this);
   Sound s;
   boolean play = true;
 
@@ -102,12 +102,9 @@ class Scene extends PApplet {
     yvalues = new float[232/xspacing];
 
     fft = new FFT(this, 16384);
-    sine.pan(p);
-    if (play){
-      sine.play();
-      play = false;
-    }
-    fft.input(sine);
+    wfm[ID].pan(p);
+    wfm[ID].play();
+    fft.input(wfm[ID]);
     
   } // end setup()
 
@@ -121,7 +118,7 @@ class Scene extends PApplet {
     // Turn the volume down globally.
     s = new Sound(this);
     s.volume(0.2);
-    sine.freq(Sfrequenz);
+    wfm[ID].freq(Sfrequenz);
 
     background(0);
     amplitude = Sfrequenz/31;
