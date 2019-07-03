@@ -1,8 +1,3 @@
-void keyPressed() {
-  if (key == 's') {
-    saveFrame("ScreenShot-######.png");  // save a screen to disk
-  }
-}
 
 public void serialEvent(Serial myPort) { // sensor input via serial port with exception handling
   try
