@@ -10,7 +10,7 @@ Scene scn3;
 
 
 public void settings() {
-  size(314, 620);
+  //size(314, 620, P3D);
   String portName = Serial.list()[1]; // change the 0 to a 1 or 2 etc. to match your port
   myPort = new Serial(this, portName, 9600);
   myPort.bufferUntil('\n');
@@ -18,40 +18,15 @@ public void settings() {
 }
 
 void setup() {
-  // surface.setResizable(true); //Fenster variable Größe
-  scn1 = new Scene(314, 620, 100, 100, 0, 100);
-  //scn2 = new Scene(314, 620, 514, 100, 1, 500);
-  //scn3 = new Scene(314, 620, 928, 100, 2, 800);
-  fill(255);
-  //surface.setSize(314, 620);
-  //surface.setLocation(100,100);
-}
+  scn1 = new Scene(314, 620, 100, 100, 0, 100, -1.0);
+  scn2 = new Scene(314, 620, 514, 100, 1, 500, 0);
+  scn3 = new Scene(314, 620, 928, 100, 2, 800, 1.0);
 
-public void serialEvent(Serial myPort) { // sensor input via serial port with exception handling
-  try
-  {
-    while ( myPort.available() > 0) // do only when port is available
-    {  
-      if (val != null) // check for NullPointerException
-      {
-        val = myPort.readStringUntil('\n');         // read data and store string in val
-        values = int(split(val, ':')); // split datapackage and convert to float
-      }
-    }
-  }
-  catch (Exception e) { // exception handling
-    println(e);
-  }
 }
 
 void draw() {
   background(50); //<>//
-}
-
-void keyPressed() {
-  if (key == 's') {
-    saveFrame("ScreenShot-######.png");  // save a screen to disk
-  }
+  surface.setVisible(false);
 }
 
 
@@ -83,6 +58,7 @@ class Scene extends PApplet {
   float[] waveYvalues = new float[500];
   float OwaveYvalues;
   float waveX;
+  float p;
   int waveCount;
   int waveLength = 500;
   int windowX;
@@ -93,9 +69,10 @@ class Scene extends PApplet {
   FFT fft;
   SinOsc sine = new SinOsc(this);
   Sound s;
+  boolean play = true;
 
 
-  Scene(int X, int Y, int pX, int pY, int num, float Frequenz) {
+  Scene(int X, int Y, int pX, int pY, int num, float Frequenz, float pan) {
     super();
     PApplet.runSketch(new String[] {this.getClass().getSimpleName()}, this);
     windowX = X;
@@ -104,12 +81,13 @@ class Scene extends PApplet {
     posY = pY;
     ID = num;
     Sfrequenz = Frequenz;
-  }
+    p = pan;
+  } // end Scene()
 
   void settings() {
-    size(314, 620);
+    size(314, 620, P2D);
     fullScreen();
-  }
+  } // end settings()
 
   void setup() {
     // surface.setResizable(true); //Fenster variable Größe
@@ -117,7 +95,6 @@ class Scene extends PApplet {
     surface.setLocation(posX, posY);
     fill(255);
     rectMode(CENTER); //Bezugspunkt für alle Abbildung ist nun ihre mitte
-    smooth();
 
     weit = width/2;
     hoch = height/2;
@@ -125,10 +102,14 @@ class Scene extends PApplet {
     yvalues = new float[232/xspacing];
 
     fft = new FFT(this, 16384);
-    sine.play();
-    sine.pan(0);
+    sine.pan(p);
+    if (play){
+      sine.play();
+      play = false;
+    }
     fft.input(sine);
-  }
+    
+  } // end setup()
 
 
   void draw() {
@@ -141,7 +122,6 @@ class Scene extends PApplet {
     s = new Sound(this);
     s.volume(0.2);
     sine.freq(Sfrequenz);
-
 
     background(0);
     amplitude = Sfrequenz/31;
@@ -197,5 +177,5 @@ class Scene extends PApplet {
 
     //t += dt;
     //theta += 0.0001*S1frequenz;
-  }
-}
+  } // end draw()
+}  // end class Scene
