@@ -27,14 +27,18 @@ public void settings() {
 
 void setup() {
   path = sketchPath();  // path to sketch directory for saving screenshots from objects
-  scn1 = new Scene(314, 620, 100, 100, 200, -1.0, 0);  // instantiate runSketch() surface objects with parameters:
-  scn2 = new Scene(314, 620, 514, 100, 500, 0, 1);     // surface width, surface height, surface x-position, surface y-position, audio pan, window ID
-  scn3 = new Scene(314, 620, 928, 100, 800, 1.0, 2);
+  scn1 = new Scene(314, 620, 100, 100, 200, -1.0, 0.7, 0);  // instantiate runSketch() surface objects with parameters:
+  scn2 = new Scene(314, 620, 514, 100, 500, 0, 0.7, 1);     // surface width, surface height, surface x-position, surface y-position, audio pan, volume,  window ID
+  scn3 = new Scene(314, 620, 928, 100, 800, 1.0, 0.7, 2);
 }
 
 void draw() {  // Processing will call a draw loop, no matter what
   background(0);
   surface.setVisible(false);  // hide main draw loop
+  scn1.audio();
+  scn2.audio();
+  scn3.audio();
+
 }
 
 class Scene extends PApplet {
@@ -59,7 +63,7 @@ class Scene extends PApplet {
   int w;              // Width of entire wave
   float theta = 0.0;  // Start angle at 0
   float waveamplitude = amplitude;  // Height of wave
-  float period = 204000/Sfrequency;  // How many pixels before the wave repeats
+  float period = 204000 / Sfrequency;  // How many pixels before the wave repeats
   float dx;  // Value for incrementing X, a function of period and xspacing
   float[] yvalues;  // Using an array to store height values for the wave
   float[] waveYvalues = new float[500];
@@ -81,8 +85,9 @@ class Scene extends PApplet {
   FFT fft = new FFT(this, 16384);
   SinOsc wfm = new SinOsc(this);
   float sineFreq;
+  float amp;
 
-  Scene(int X, int Y, int pX, int pY, float Frequency, float pan, int num) {
+  Scene(int X, int Y, int pX, int pY, float Frequency, float pan, float vol, int num) {
     super();
     PApplet.runSketch(new String[] {this.getClass().getSimpleName()}, this);
     windowX = X;
@@ -92,6 +97,8 @@ class Scene extends PApplet {
     Sfrequency = Frequency;
     p = pan;
     ID = num;
+    amp = vol;
+    
   } // end Scene()
 
   void settings() {
@@ -106,24 +113,30 @@ class Scene extends PApplet {
     fill(255);
     //rectMode(CENTER); // create rectangular shapes from center
 
-    wide = width/2;
-    tall = height/2;
+    wide = width / 2;
+    tall = height / 2;
     dx = (TWO_PI / period) * xspacing;
-    yvalues = new float[232/xspacing];
-
-    wfm.play();
-    wfm.pan(p);
-    fft.input(wfm);
+    yvalues = new float[232 / xspacing];
   } // end setup()
+
+void audio(){  // play sine tone
+ 
+  wfm.play();
+  wfm.pan(p);    
+  wfm.freq(Sfrequency);
+  wfm.amp(amp);
+  fft.input(wfm);
+ 
+}
 
   void draw() {
     Sfrequency = map(values[ID], 0, 1024, 0, 2550);
 
     if (debug) {
-      println("Surface "+ID);
-      print("Frequency "+ID+" ");
+      println("Surface " + ID);
+      print("Frequency " + ID + " ");
       println(Sfrequency);
-      print("Amplitude "+ID+" ");
+      print("Amplitude " + ID + " ");
       println(amplitude);
       println();
     }
