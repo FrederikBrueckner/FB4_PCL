@@ -1,9 +1,9 @@
 #include <ADCTouch.h>
 
 /*
-   Capacitive plate dimmer sketch to PWM drive two MOSFETs for constant voltage LED strip dimming
+   Capacitive plate dimmer sketch to PWM drive a MOSFET for LED dimming
    by: Frederik Brückner
-   date: 2019-01-16
+   date: 2020-01-08
    license: MIT License - Feel free to use this code for any purpose.
    No restrictions. Just keep this license if you go on to use this code in your future endeavors! Reuse and share.
    Recommended MOSFET: IRL540
@@ -18,6 +18,8 @@ unsigned long lastTouch;
 unsigned long time;
 unsigned long touchTime;
 int brightness = 0;
+int x = 1;
+boolean flip = false;
 
 void setup() {
   Serial.begin(9600);
@@ -54,7 +56,28 @@ void loop() {
     touchTime = 0;
   }
 
+if (brightness == 255){
+  x = -1;
+}
+
+if (brightness == 0){
+  x = 1;
+}
+
+if (touchTime >= 200 && touch){
+  brightness = brightness + x;
+  flip = true;
+}
+
+if(!touch && flip){
+  x = -x;
+  flip = false;
+}
+
   touchTime = millis() - lastTouch;
   Serial.println(touchTime);
+  Serial.print("Brightness: ");
+  Serial.println(brightness);
+  Serial.println();
   analogWrite(PWM, brightness);
 }
