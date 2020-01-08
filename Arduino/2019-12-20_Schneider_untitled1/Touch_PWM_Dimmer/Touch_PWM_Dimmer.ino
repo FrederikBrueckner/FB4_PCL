@@ -9,75 +9,76 @@
    Recommended MOSFET: IRL540
 */
 
-int ref0;
-int PWM = 5;  //Steuerpin für MOSFET
-int sense;
-int threshold = 200;
-boolean touch = false;
-unsigned long lastTouch;
-unsigned long time;
-unsigned long touchTime;
-int brightness = 0;
-int x = 1;
-boolean flip = false;
+int ref0; // Variable für Referenzmessung
+int PWM = 5;  // Steuerpin für MOSFET
+int sense;  // Variable für Messung
+int threshold = 200;  // Grenzwert Berührempfindlichkeit
+boolean touch = false;  // Variable Sensor berührt oder nicht?
+unsigned long lastTouch;  // Variable Zeit seit letzter Berührung
+unsigned long time; // Zeitmessung
+unsigned long touchTime;  // Variable Berührzeit
+int brightness = 0; // Variable LED Helligkeit
+int x = 1;  // Variable Helligkeitsschritte
+boolean flip = false; // Variable Richtungswechsel Dimmung
 
 void setup() {
-  Serial.begin(9600);
-  delay(500);
-  ref0 = ADCTouch.read(A0, 500);
-  pinMode(PWM, OUTPUT);
-  lastTouch = millis();
-  touchTime = 0;
-}
+  Serial.begin(9600); // Serielle Schnittstelle öffnen
+  delay(500); // Pause für MCU Pin Ausgleich
+  ref0 = ADCTouch.read(A0, 500);  // Referenzmessung
+  pinMode(PWM, OUTPUT); // PWM Pin als Output konfigurieren
+  lastTouch = millis(); // Initialisierung letzte Berührung
+  touchTime = 0;  // Initialisierung Berührzeit
+}  // end setup()
 
 void loop() {
-  sense = ADCTouch.read(A0) - ref0;
+  sense = ADCTouch.read(A0) - ref0; // Messung an Analogpin
   //Serial.println(sense);
-  if (sense > threshold && !touch) {
+  if (sense > threshold && !touch) {  // Erkennung Berührung
     Serial.println("Kontakt!");
     touch = true;
   }
 
-  if (sense < threshold) {
+  if (sense < threshold) {  // Erkennung keine Berührung
     touch = false;
     lastTouch = millis();
   }
 
-  if (touchTime > 10 && touchTime < 200 && brightness == 0 && !touch){
+  if (touchTime > 10 && touchTime < 200 && brightness == 0 && !touch) { // Einschalten
     brightness = 255;
     Serial.println("on");
     lastTouch = millis();
     touchTime = 0;
   }
-  if (touchTime > 10 && touchTime < 200 && brightness > 0 && !touch){
+
+  if (touchTime > 10 && touchTime < 200 && brightness > 0 && !touch) { // Ausschalten
     brightness = 0;
     Serial.println("off");
     lastTouch = millis();
     touchTime = 0;
   }
 
-if (brightness == 255){
-  x = -1;
-}
+  if (brightness == 255) { // Variablenüberfluss verhindern
+    x = -1;
+  }
 
-if (brightness == 0){
-  x = 1;
-}
+  if (brightness == 0) { // Variablenunterfluss verhindern
+    x = 1;
+  }
 
-if (touchTime >= 200 && touch){
-  brightness = brightness + x;
-  flip = true;
-}
+  if (touchTime >= 200 && touch) { // Dimmung
+    brightness = brightness + x;
+    flip = true;
+  }
 
-if(!touch && flip){
-  x = -x;
-  flip = false;
-}
+  if (!touch && flip) { // Dimmer Richtung wechseln
+    x = -x;
+    flip = false;
+  }
 
   touchTime = millis() - lastTouch;
   Serial.println(touchTime);
   Serial.print("Brightness: ");
   Serial.println(brightness);
   Serial.println();
-  analogWrite(PWM, brightness);
-}
+  analogWrite(PWM, brightness); // aktuelle Helligkeit schreiben
+}  // end loop()
